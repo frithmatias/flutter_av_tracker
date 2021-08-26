@@ -1,0 +1,10 @@
+# This file tracks properties of this Flutter project.
+# Used by Flutter tool to assess capabilities and perform upgrades etc.
+#
+# This file should be version controlled and should not be manually edited.
+
+version:
+  revision: 1944b8ca54e7137ea578c546be4c3942a5710221
+  channel: revert-88473-timelines
+
+project_type: app
