@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:rutas_app/bloc/mapa/mapa_bloc.dart';
 
 import 'package:rutas_app/bloc/mi_ubicacion/mi_ubicacion_bloc.dart';
+import 'package:rutas_app/widgets/widgets.dart';
 
 class MapaPage extends StatefulWidget {
   const MapaPage({Key? key}) : super(key: key);
@@ -37,13 +39,24 @@ class _MapaPageState extends State<MapaPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: BlocBuilder<MiUbicacionBloc, MiUbicacionState>(
-      builder: (context, state) => crearMapa(state),
-    ));
+          builder: (context, state) => crearMapa(state),
+        ), 
+        floatingActionButton: Column(  
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: const [  
+            BtnUbicacion()
+          ]
+        ),
+    );
   }
 
   Widget crearMapa(MiUbicacionState state) {
-    if(!state.existeUbicacion) return const Center(child: Text('Localizando...'));
+    if (!state.existeUbicacion) {
+      return const Center(child: Text('Localizando...'));
+    }
     // return Center(child: Text('> ${state.ubicacion!.latitude},${state.ubicacion!.longitude} <'));
+
+    final mapaBloc = BlocProvider.of<MapaBloc>(context);
 
     final CameraPosition camPosition = CameraPosition(
       bearing: 0,
@@ -53,10 +66,18 @@ class _MapaPageState extends State<MapaPage> {
 
     return GoogleMap(
       mapType: MapType.normal,
-      initialCameraPosition: camPosition, 
+      initialCameraPosition: camPosition,
       myLocationEnabled: true,
       myLocationButtonEnabled: true,
       // ver las propiedades y metodos aquí, los eventos empiezan con 'on'
+
+      // para trear la referencia al bloc podríamos hacer context.read() ... pero lo vamos a hacer de otra manera
+      // onMapCreated: ( GoogleMapController controller ){
+      //   mapaBloc.initMapa(controller);
+      // },
+
+      // como tengo un sólo argumento puedo reducir esta expresión.
+      onMapCreated: mapaBloc.initMapa,
     );
   }
 }
