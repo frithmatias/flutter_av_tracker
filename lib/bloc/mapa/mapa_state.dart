@@ -1,15 +1,34 @@
 part of 'mapa_bloc.dart';
 
 @immutable
-// abstract class MapaState {}
 
-// class MapaInitial extends MapaState {}
 class MapaState {
-  final bool mapaListo; // voy a crear un evento que cambie este estado
-  const MapaState({this.mapaListo = false});
+  
+  final bool mapaListo; 
+  final bool dibujarRecorrido;
+  final Map<String, Polyline> polylines;
 
+  const MapaState({
+    this.mapaListo = false, 
+    this.dibujarRecorrido = true,
+    this.polylines = const {}
+  });
 
   MapaState copyWith({
-    bool mapaListo = false
-  }) => MapaState(mapaListo: mapaListo);
+    bool mapaListo = false,
+    bool dibujarRecorrido = false,
+    Map<String, Polyline> polylines = const {}
+  }) => MapaState(
+    mapaListo: mapaListo, 
+    dibujarRecorrido: dibujarRecorrido,
+    polylines: polylines,
+  );
+
+  @override
+  toString(){
+    return '$mapaListo $dibujarRecorrido $polylines';
+  }
 }
+
+
+

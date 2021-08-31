@@ -6,11 +6,7 @@ class BtnUbicacion extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
-    // para acceder al metodo read() tengo que importar flutter_bloc.dart en widgets.dart
-    // import 'package:flutter_bloc/flutter_bloc.dart';
-    // import 'package:rutas_app/bloc/mapa/mapa_bloc.dart';
-    // import 'package:rutas_app/bloc/mi_ubicacion/mi_ubicacion_bloc.dart';
+
     final mapaBloc = context.read<MapaBloc>();
     final ubicacionBloc = context.read<MiUbicacionBloc>();
 

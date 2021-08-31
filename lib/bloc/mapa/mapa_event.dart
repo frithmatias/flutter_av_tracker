@@ -4,4 +4,8 @@ part of 'mapa_bloc.dart';
 abstract class MapaEvent {}
 
 class OnMapaListo extends MapaEvent{}
-// cuando llame al evento OnMapaListo yo se que el mapa ya esta cargado
+
+class OnCambiaUbicacion extends MapaEvent{
+  final LatLng ubicacion;
+  OnCambiaUbicacion(this.ubicacion);
+}

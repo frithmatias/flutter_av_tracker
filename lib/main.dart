@@ -17,12 +17,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(  
       providers: [  
-        // blocprovider -> snippet para BlocProvider
-        // o ya sobre BlocProvider() > Ctrl+. > Add required argument 'create'
         BlocProvider( create: (_) => MiUbicacionBloc()),
         BlocProvider( create: (_) => MapaBloc()), 
-        // inyecto una instancia del MapaBloc en el context para tener acceso a todas sus propiedades 
-        // y metodos en cualquier widget
         ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

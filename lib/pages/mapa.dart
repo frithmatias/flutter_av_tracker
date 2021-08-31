@@ -14,16 +14,9 @@ class MapaPage extends StatefulWidget {
 }
 
 class _MapaPageState extends State<MapaPage> {
-  // convierto a statefulwidget para tener el initState y poder menejar el estado
 
   @override
   void initState() {
-    // en mi initState necesito acceso a mi bloc de la ubicacion, podemos usar el BlocProvider
-
-    //  final miubicacionBloc = BlocProvider.of<MiUbicacionBloc>(context);
-    //  miubicacionBloc.iniciarSeguimiento();
-
-    // Pero podemos importar flutter_bloc.dart para accedar al context
     context.read<MiUbicacionBloc>().iniciarSeguimiento();
     super.initState();
   }
@@ -34,7 +27,6 @@ class _MapaPageState extends State<MapaPage> {
     super.dispose();
   }
 
-  // En el Widget voy a dibujar la data y para eso utilizo BlocBuilder para levantar la data de mi bloc
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,9 +46,6 @@ class _MapaPageState extends State<MapaPage> {
     if (!state.existeUbicacion) {
       return const Center(child: Text('Localizando...'));
     }
-    // return Center(child: Text('> ${state.ubicacion!.latitude},${state.ubicacion!.longitude} <'));
-
-    final mapaBloc = BlocProvider.of<MapaBloc>(context);
 
     final CameraPosition camPosition = CameraPosition(
       bearing: 0,
@@ -64,20 +53,16 @@ class _MapaPageState extends State<MapaPage> {
       zoom: 15,
     );
 
+    final mapaBloc = BlocProvider.of<MapaBloc>(context);
+    mapaBloc.add(OnCambiaUbicacion(state.ubicacion!));
+
     return GoogleMap(
       mapType: MapType.normal,
       initialCameraPosition: camPosition,
       myLocationEnabled: true,
       myLocationButtonEnabled: true,
-      // ver las propiedades y metodos aquí, los eventos empiezan con 'on'
-
-      // para trear la referencia al bloc podríamos hacer context.read() ... pero lo vamos a hacer de otra manera
-      // onMapCreated: ( GoogleMapController controller ){
-      //   mapaBloc.initMapa(controller);
-      // },
-
-      // como tengo un sólo argumento puedo reducir esta expresión.
       onMapCreated: mapaBloc.initMapa,
+      polylines: mapaBloc.state.polylines.values.toSet(),
     );
   }
 }
