@@ -37,7 +37,8 @@ class _MapaPageState extends State<MapaPage> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: const [  
             BtnUbicacion(),
-            BtnMiRuta()
+            BtnMiRuta(),
+            BtnSeguir()
           ]
         ),
     );
@@ -55,9 +56,15 @@ class _MapaPageState extends State<MapaPage> {
     );
 
     final mapaBloc = BlocProvider.of<MapaBloc>(context);
-    print(mapaBloc.state);
     mapaBloc.add(OnCambiaUbicacion(state.ubicacion!));
 
+    print(mapaBloc.state);
+
+    if(mapaBloc.state.seguir){
+      mapaBloc.moverCamara(state.ubicacion!);
+    }
+
+    late LatLng mapaCenter;
     return GoogleMap(
       mapType: MapType.normal,
       initialCameraPosition: camPosition,
@@ -65,7 +72,12 @@ class _MapaPageState extends State<MapaPage> {
       myLocationButtonEnabled: false,
       zoomControlsEnabled: false,
       onMapCreated: mapaBloc.initMapa,
-      polylines: mapaBloc.state.dibujarRecorrido! ? mapaBloc.state.polylines.values.toSet() : {},
+      polylines: mapaBloc.state.dibujarRecorrido ? mapaBloc.state.polylines.values.toSet() : {},
+      onCameraMove: ( cameraPosition ) { mapaCenter = cameraPosition.target; },
+      onCameraIdle: () { 
+        mapaBloc.add( OnMapaMovio( LatLng(mapaCenter.latitude, mapaCenter.longitude) ));
+      },
+
     );
   }
 }
