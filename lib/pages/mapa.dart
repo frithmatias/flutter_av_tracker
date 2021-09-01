@@ -36,7 +36,8 @@ class _MapaPageState extends State<MapaPage> {
         floatingActionButton: Column(  
           mainAxisAlignment: MainAxisAlignment.end,
           children: const [  
-            BtnUbicacion()
+            BtnUbicacion(),
+            BtnMiRuta()
           ]
         ),
     );
@@ -54,15 +55,17 @@ class _MapaPageState extends State<MapaPage> {
     );
 
     final mapaBloc = BlocProvider.of<MapaBloc>(context);
+    print(mapaBloc.state);
     mapaBloc.add(OnCambiaUbicacion(state.ubicacion!));
 
     return GoogleMap(
       mapType: MapType.normal,
       initialCameraPosition: camPosition,
       myLocationEnabled: true,
-      myLocationButtonEnabled: true,
+      myLocationButtonEnabled: false,
+      zoomControlsEnabled: false,
       onMapCreated: mapaBloc.initMapa,
-      polylines: mapaBloc.state.polylines.values.toSet(),
+      polylines: mapaBloc.state.dibujarRecorrido! ? mapaBloc.state.polylines.values.toSet() : {},
     );
   }
 }

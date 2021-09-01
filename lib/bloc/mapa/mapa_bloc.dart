@@ -39,17 +39,24 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
   @override
   Stream<MapaState> mapEventToState(MapaEvent event) async* {
     if(event is OnMapaListo){
+
       yield state.copyWith( mapaListo: true);
+    
     } else if (event is OnCambiaUbicacion) {
 
       List<LatLng> points = [..._miruta.points, event.ubicacion];
       _miruta = _miruta.copyWith(pointsParam: points);
       Map<String, Polyline> currentPolylines = {'mi_ruta': _miruta};
-
-      for( Polyline polyline in currentPolylines.values){
-        print('${polyline.polylineId.value} -> ${polyline.points.length}');
-      }
       yield state.copyWith(polylines: currentPolylines);
+
+      //for( Polyline polyline in currentPolylines.values){
+      //  print('${polyline.polylineId.value} -> ${polyline.points.length}');
+      //}
+
+    } else if (event is OnMarcarRecorrido){
+
+      yield state.copyWith(dibujarRecorrido: !state.dibujarRecorrido!);
+
     }
   }
 }

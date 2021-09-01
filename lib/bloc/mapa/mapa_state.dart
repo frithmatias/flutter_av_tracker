@@ -5,28 +5,28 @@ part of 'mapa_bloc.dart';
 class MapaState {
   
   final bool mapaListo; 
-  final bool dibujarRecorrido;
+  final bool? dibujarRecorrido;
   final Map<String, Polyline> polylines;
 
   const MapaState({
     this.mapaListo = false, 
-    this.dibujarRecorrido = true,
+    this.dibujarRecorrido = false,
     this.polylines = const {}
   });
 
   MapaState copyWith({
-    bool mapaListo = false,
-    bool dibujarRecorrido = false,
-    Map<String, Polyline> polylines = const {}
+    bool? mapaListo,
+    bool? dibujarRecorrido,
+    Map<String, Polyline>? polylines
   }) => MapaState(
-    mapaListo: mapaListo, 
-    dibujarRecorrido: dibujarRecorrido,
-    polylines: polylines,
+    mapaListo: mapaListo ?? this.mapaListo, 
+    dibujarRecorrido: dibujarRecorrido ?? this.dibujarRecorrido, 
+    polylines: polylines ?? this.polylines,
   );
-
+  
   @override
   toString(){
-    return '$mapaListo $dibujarRecorrido $polylines';
+    return 'mapaListo: $mapaListo dibujarRecorrido: $dibujarRecorrido num.polylines: ${polylines.length}';
   }
 }
 
