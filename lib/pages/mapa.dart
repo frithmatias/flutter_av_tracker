@@ -30,8 +30,25 @@ class _MapaPageState extends State<MapaPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: BlocBuilder<MiUbicacionBloc, MiUbicacionState>(
-          builder: (context, state) => crearMapa(state),
+        body: Stack(
+          children: [
+            
+            BlocBuilder<MiUbicacionBloc, MiUbicacionState>(
+              builder: (context, state) => crearMapa(state),
+            ),
+
+
+
+            // NO voy a implementar un BlocBuilder acá, lo voy a hacer dentro de Search()
+            const Positioned(
+             top: 0,
+             child: Search()
+            ),
+            
+            // NO voy a implementar un BlocBuilder acá, lo voy a hacer dentro de MarcadorManual() 
+            const MarcadorManual()
+
+          ],
         ), 
         floatingActionButton: Column(  
           mainAxisAlignment: MainAxisAlignment.end,
@@ -65,6 +82,7 @@ class _MapaPageState extends State<MapaPage> {
     }
 
     late LatLng mapaCenter;
+    // return Container(color: Colors.red);
     return GoogleMap(
       mapType: MapType.normal,
       initialCameraPosition: camPosition,
@@ -77,7 +95,6 @@ class _MapaPageState extends State<MapaPage> {
       onCameraIdle: () { 
         mapaBloc.add( OnMapaMovio( LatLng(mapaCenter.latitude, mapaCenter.longitude) ));
       },
-
     );
   }
 }
