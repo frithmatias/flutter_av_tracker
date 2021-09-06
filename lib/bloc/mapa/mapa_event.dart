@@ -18,3 +18,13 @@ class OnMapaMovio extends MapaEvent{
   final LatLng centroMapa;
   OnMapaMovio(this.centroMapa);
 }
+
+
+class OnCrearRuta extends MapaEvent{
+  final List<LatLng> rutaCoords;
+  final double distancia;
+  final double duracion;
+
+  OnCrearRuta(this.rutaCoords, this.distancia, this.duracion);
+
+}

@@ -54,7 +54,7 @@ class _MapaPageState extends State<MapaPage> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: const [  
             BtnUbicacion(),
-            BtnMiRuta(),
+            BtnMiRecorrido(),
             BtnSeguir()
           ]
         ),
@@ -68,33 +68,37 @@ class _MapaPageState extends State<MapaPage> {
 
     final CameraPosition camPosition = CameraPosition(
       bearing: 0,
-      target: state.ubicacion!,
+      target: state.ubicacion,
       zoom: 15,
     );
 
     final mapaBloc = BlocProvider.of<MapaBloc>(context);
-    mapaBloc.add(OnCambiaUbicacion(state.ubicacion!));
-
-    print(mapaBloc.state);
+    mapaBloc.add(OnCambiaUbicacion(state.ubicacion));
 
     if(mapaBloc.state.seguir){
-      mapaBloc.moverCamara(state.ubicacion!);
+      mapaBloc.moverCamara(state.ubicacion);
     }
 
-    late LatLng mapaCenter;
-    // return Container(color: Colors.red);
-    return GoogleMap(
-      mapType: MapType.normal,
-      initialCameraPosition: camPosition,
-      myLocationEnabled: true,
-      myLocationButtonEnabled: false,
-      zoomControlsEnabled: false,
-      onMapCreated: mapaBloc.initMapa,
-      polylines: mapaBloc.state.dibujarRecorrido ? mapaBloc.state.polylines.values.toSet() : {},
-      onCameraMove: ( cameraPosition ) { mapaCenter = cameraPosition.target; },
-      onCameraIdle: () { 
-        mapaBloc.add( OnMapaMovio( LatLng(mapaCenter.latitude, mapaCenter.longitude) ));
+    LatLng mapaCenter = state.ubicacion;
+
+    
+    return BlocBuilder<MapaBloc, MapaState>(
+      builder: (context, state) {
+            return GoogleMap(
+              mapType: MapType.normal,
+              initialCameraPosition: camPosition,
+              myLocationEnabled: true,
+              myLocationButtonEnabled: false,
+              zoomControlsEnabled: false,
+              onMapCreated: mapaBloc.initMapa,
+              polylines: state.dibujarRecorrido ? state.polylines.values.toSet() : {},
+              onCameraMove: ( cameraPosition ) { mapaCenter = cameraPosition.target; },
+              onCameraIdle: () { 
+                mapaBloc.add( OnMapaMovio( LatLng(mapaCenter.latitude, mapaCenter.longitude) ));
+              },
+            );
       },
     );
+
   }
 }

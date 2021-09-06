@@ -18,7 +18,7 @@ class BtnUbicacion extends StatelessWidget {
         child: IconButton(  
           icon: const Icon( Icons.my_location, color: Colors.black54), 
           onPressed: () {
-            mapaBloc.moverCamara(ubicacionBloc.state.ubicacion!);
+            mapaBloc.moverCamara(ubicacionBloc.state.ubicacion);
           },
         )
       )
