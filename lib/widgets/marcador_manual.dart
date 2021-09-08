@@ -60,34 +60,12 @@ class _MarcadorManual extends StatelessWidget {
                   elevation: 0,
                   splashColor: Colors.yellow,
                   onPressed: () {
-                    calcularDestino(context);
+                    TrafficService().getRouteTo(context, null);
                   }),
             ))
       ],
     );
   }
 
-  void calcularDestino(BuildContext context) async {
-    calculandoAlerta(context);
 
-    final from = context.read<MiUbicacionBloc>().state.ubicacion;
-    final to = context.read<MapaBloc>().state.ubicacionCentral;
-    final mapboxResponse = await TrafficService().getCoordsFromTo(from, to);
-
-    final geometry = mapboxResponse.routes[0].geometry;
-    final duration = mapboxResponse.routes[0].duration;
-    final distance = mapboxResponse.routes[0].distance;
-
-    final coords = poly.Polyline.Decode(encodedString: geometry, precision: 6)
-        .decodedCoords;
-    final List<LatLng> points =
-        coords.map((coord) => LatLng(coord[0], coord[1])).toList();
-
-    context.read<MapaBloc>().add(OnCrearRuta(points, distance, duration));
-    context.read<BusquedaBloc>().add(OnDesactivarMarcadorManual());
-    context
-        .read<MapaBloc>()
-        .moverCamara(context.read<MiUbicacionBloc>().state.ubicacion);
-    Navigator.of(context).pop();
-  }
 }

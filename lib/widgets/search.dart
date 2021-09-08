@@ -47,11 +47,17 @@ class Search extends StatelessWidget {
   }
 
   void resultadoBusqueda(BuildContext context, SearchResults result) {
+
     if (result.cancelo) return;
+
     if (result.manual == true) {
       context.read<BusquedaBloc>().add(OnActivarMarcadorManual());
       return;
     }
+
+    if(result.ubicacion == null) return;
+
+    TrafficService().getRouteTo(context, result.ubicacion);
 
   }
 }
