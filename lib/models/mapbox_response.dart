@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final mapboxResponse = mapboxResponseFromJson(jsonString);
-
 import 'dart:convert';
 
 MapboxResponse mapboxResponseFromJson(String str) => MapboxResponse.fromJson(json.decode(str));

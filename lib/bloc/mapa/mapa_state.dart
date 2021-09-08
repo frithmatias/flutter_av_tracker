@@ -14,7 +14,7 @@ class MapaState {
     this.mapaListo = false, 
     this.dibujarRecorrido = false,
     this.seguir = false,
-    this.ubicacionCentral = const LatLng(0, 0),
+    this.ubicacionCentral = const LatLng(0,0),
     this.polylines = const {}
   });
 

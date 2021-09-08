@@ -14,7 +14,6 @@ class MapaPage extends StatefulWidget {
 }
 
 class _MapaPageState extends State<MapaPage> {
-
   @override
   void initState() {
     context.read<MiUbicacionBloc>().iniciarSeguimiento();
@@ -30,75 +29,69 @@ class _MapaPageState extends State<MapaPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Stack(
-          children: [
-            
-            BlocBuilder<MiUbicacionBloc, MiUbicacionState>(
-              builder: (context, state) => crearMapa(state),
-            ),
-
-
-
-            // NO voy a implementar un BlocBuilder acá, lo voy a hacer dentro de Search()
-            const Positioned(
-             top: 0,
-             child: Search()
-            ),
-            
-            // NO voy a implementar un BlocBuilder acá, lo voy a hacer dentro de MarcadorManual() 
-            const MarcadorManual()
-
-          ],
-        ), 
-        floatingActionButton: Column(  
+      body: Stack(
+        children: [
+          BlocBuilder<MiUbicacionBloc, MiUbicacionState>(
+              builder: (context, miUbicacionState) {
+            return BlocBuilder<MapaBloc, MapaState>(
+              builder: (context, mapaState) =>
+                  crearMapa(miUbicacionState, mapaState),
+            );
+          }),
+          const Positioned(top: 0, child: Search()),
+          const MarcadorManual()
+        ],
+      ),
+      floatingActionButton: Column(
           mainAxisAlignment: MainAxisAlignment.end,
-          children: const [  
-            BtnUbicacion(),
-            BtnMiRecorrido(),
-            BtnSeguir()
-          ]
-        ),
+          children: const [BtnUbicacion(), BtnMiRecorrido(), BtnSeguir()]),
     );
   }
 
-  Widget crearMapa(MiUbicacionState state) {
-    if (!state.existeUbicacion) {
+  Widget crearMapa(MiUbicacionState miUbicacionState, MapaState mapaState) {
+    if (!miUbicacionState.existeUbicacion) {
       return const Center(child: Text('Localizando...'));
     }
 
     final CameraPosition camPosition = CameraPosition(
       bearing: 0,
-      target: state.ubicacion,
+      target: miUbicacionState.ubicacion,
       zoom: 15,
     );
 
     final mapaBloc = BlocProvider.of<MapaBloc>(context);
-    mapaBloc.add(OnCambiaUbicacion(state.ubicacion));
+    mapaBloc.add(OnCambiaUbicacion(miUbicacionState.ubicacion));
 
-    if(mapaBloc.state.seguir){
-      mapaBloc.moverCamara(state.ubicacion);
+    if (mapaBloc.state.seguir) {
+      mapaBloc.moverCamara(miUbicacionState.ubicacion);
     }
 
-    LatLng mapaCenter = state.ubicacion;
+    LatLng mapaCenter = miUbicacionState.ubicacion;
 
-    
-    return BlocBuilder<MapaBloc, MapaState>(
-      builder: (context, state) {
-            return GoogleMap(
-              mapType: MapType.normal,
-              initialCameraPosition: camPosition,
-              myLocationEnabled: true,
-              myLocationButtonEnabled: false,
-              zoomControlsEnabled: false,
-              onMapCreated: mapaBloc.initMapa,
-              polylines: state.dibujarRecorrido ? state.polylines.values.toSet() : {},
-              onCameraMove: ( cameraPosition ) { mapaCenter = cameraPosition.target; },
-              onCameraIdle: () { 
-                mapaBloc.add( OnMapaMovio( LatLng(mapaCenter.latitude, mapaCenter.longitude) ));
-              },
-            );
+    Map<String, Polyline> newMap = {};
+
+    if (!mapaState.dibujarRecorrido && newMap.containsKey('mi_recorrido')) {
+      newMap = mapaState.polylines;
+      newMap.remove('mi_recorrido');
+    }
+
+    return GoogleMap(
+      mapType: MapType.normal,
+      initialCameraPosition: camPosition,
+      myLocationEnabled: true,
+      myLocationButtonEnabled: false,
+      zoomControlsEnabled: false,
+      onMapCreated: mapaBloc.initMapa,
+      polylines: mapaState.dibujarRecorrido
+          ? mapaState.polylines.values.toSet()
+          : newMap.values.toSet(),
+      onCameraMove: (cameraPosition) {
+        mapaCenter = cameraPosition.target;
+      },
+      onCameraIdle: () {
+        mapaBloc.add(
+            OnMapaMovio(LatLng(mapaCenter.latitude, mapaCenter.longitude)));
       },
     );
-
   }
 }

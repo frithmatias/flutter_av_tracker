@@ -16,8 +16,8 @@ class BtnMiRecorrido extends StatelessWidget {
                 maxRadius: 25,
                 child: IconButton(
                   icon: state.dibujarRecorrido
-                      ? const Icon(Icons.explore, color: Colors.blue)
-                      : const Icon(Icons.explore_off, color: Colors.black45),
+                      ? const Icon(Icons.linear_scale_outlined, color: Colors.blue, size: 30)
+                      : const Icon(Icons.linear_scale_outlined, color: Colors.black45),
                   onPressed: () {
                     mapaBloc.add(OnMarcarRecorrido());
                   },
