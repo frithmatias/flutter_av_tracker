@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:rutas_app/bloc/busqueda/busqueda_bloc.dart';
 import 'package:rutas_app/bloc/mi_ubicacion/mi_ubicacion_bloc.dart';
 import 'package:rutas_app/models/mapbox_places_response.dart';
 import 'package:rutas_app/models/search_results.dart';
@@ -47,6 +48,11 @@ class SearchDestination extends SearchDelegate<SearchResults> {
 
 
   Widget _emptyContainer(BuildContext context) {
+
+
+
+    List<SearchResults> historial = context.read<BusquedaBloc>().state.historial;
+
     return ListView(children: [
       ListTile(
           leading: const Icon(Icons.location_on, color: Colors.red),
@@ -55,6 +61,16 @@ class SearchDestination extends SearchDelegate<SearchResults> {
           onTap: () {
             close(context, SearchResults(false, true));
           }),
+
+      ...historial.map((place) => ListTile(  
+                leading: const Icon(Icons.history),
+                title: Text(place.nombre!),
+                subtitle: Text( place.descripcion! ),
+                onTap: (){
+                  close(context, SearchResults(false, false, place.ubicacion, place.nombre, place.descripcion));
+                },
+          ))
+    
     ]);
   }
 
@@ -89,7 +105,6 @@ class SearchDestination extends SearchDelegate<SearchResults> {
                 title: Text(places[index].text),
                 subtitle: Text( places[index].placeName ),
                 onTap: (){
-
                   final LatLng pos = LatLng(places[index].geometry.coordinates[1], places[index].geometry.coordinates[0]);
                   close(context, SearchResults(false, false, pos, places[index].text, places[index].placeName));
                 },

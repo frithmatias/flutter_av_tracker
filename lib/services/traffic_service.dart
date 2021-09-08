@@ -96,8 +96,8 @@ class TrafficService {
     final List<LatLng> points = coords.map((coord) => LatLng(coord[0], coord[1])).toList();
 
     context.read<MapaBloc>().add(OnCrearRuta(points, distance, duration));
-    context.read<BusquedaBloc>().add(OnDesactivarMarcadorManual());
     context.read<MapaBloc>().moverCamara(context.read<MiUbicacionBloc>().state.ubicacion);
+    context.read<BusquedaBloc>().add(OnDesactivarMarcadorManual());
 
     Navigator.of(context).pop();
 
