@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rutas_app/bloc/busqueda/busqueda_bloc.dart';
 import 'package:rutas_app/bloc/mi_ubicacion/mi_ubicacion_bloc.dart';
-import 'package:rutas_app/models/mapbox_places_response.dart';
+import 'package:rutas_app/models/mapbox_place.dart';
 import 'package:rutas_app/models/search_results.dart';
 import 'package:rutas_app/services/traffic_service.dart';
 
@@ -87,11 +87,11 @@ class SearchDestination extends SearchDelegate<SearchResults> {
 
     final miUbicacionBloc = BlocProvider.of<MiUbicacionBloc>(context);
     final location = miUbicacionBloc.state.ubicacion;
-    _trafficService.getSuggestionsByQuery(query.trim(), location);
+    _trafficService.getPlacesFrom(query.trim(), location);
     
     return StreamBuilder(
         stream: _trafficService.suggestionStream,
-        builder: (_, AsyncSnapshot<List<Feature>> snapshot) {
+        builder: (_, AsyncSnapshot<List<Place>> snapshot) {
 
         if (!snapshot.hasData) return _waitContainer(context);
        

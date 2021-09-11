@@ -57,11 +57,11 @@ class Search extends StatelessWidget {
 
     if(result.ubicacion == null) return;
 
+    TrafficService().getRouteTo(context, result.ubicacion);
+
     final busquedaBloc = context.read<BusquedaBloc>(); 
     final yaexiste = busquedaBloc.state.historial.where((element) => element.nombre == result.nombre);
     if(yaexiste.isEmpty) busquedaBloc.add(OnSavePlace(result));
-
-    TrafficService().getRouteTo(context, result.ubicacion);
 
   }
 }

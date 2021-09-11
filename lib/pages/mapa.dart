@@ -68,11 +68,12 @@ class _MapaPageState extends State<MapaPage> {
 
     LatLng mapaCenter = miUbicacionState.ubicacion;
 
-    Map<String, Polyline> newMap = {};
+    Map<String, Polyline> miRecorridoRemoved = {};
 
-    if (!mapaState.dibujarRecorrido && newMap.containsKey('mi_recorrido')) {
-      newMap = mapaState.polylines;
-      newMap.remove('mi_recorrido');
+    if (!mapaState.dibujarRecorrido &&
+        miRecorridoRemoved.containsKey('mi_recorrido')) {
+      miRecorridoRemoved = mapaState.polylines;
+      miRecorridoRemoved.remove('mi_recorrido');
     }
 
     return GoogleMap(
@@ -84,7 +85,8 @@ class _MapaPageState extends State<MapaPage> {
       onMapCreated: mapaBloc.initMapa,
       polylines: mapaState.dibujarRecorrido
           ? mapaState.polylines.values.toSet()
-          : newMap.values.toSet(),
+          : miRecorridoRemoved.values.toSet(),
+      markers: mapaState.markers.values.toSet(),
       onCameraMove: (cameraPosition) {
         mapaCenter = cameraPosition.target;
       },

@@ -8,6 +8,7 @@ import 'package:rutas_app/bloc/mi_ubicacion/mi_ubicacion_bloc.dart';
 import 'package:rutas_app/pages/mapa.dart';
 import 'package:rutas_app/pages/acceso_gps.dart';
 import 'package:rutas_app/pages/loading.dart';
+import 'package:rutas_app/pages/test_marker_page.dart';
  
 void main() => runApp(const MyApp());
  
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
           'loading': (_) => const LoadingPage(),
           'accesogps': (_) => const AccesoGpsPage(),
           'mapa': (_) => const MapaPage(),
+          'marker': (_) => const TestMarkerPage(),
         },
       ),
     );

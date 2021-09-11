@@ -1,13 +1,12 @@
 import 'dart:convert';
-
 import 'mapbox_place.dart';
 
-MapboxPlacesResponse mapboxPlacesResponseFromJson(String str) => MapboxPlacesResponse.fromJson(json.decode(str));
+MapboxInfoResponse mapboxInfoResponseFromJson(String str) => MapboxInfoResponse.fromJson(json.decode(str));
 
-String mapboxPlacesResponseToJson(MapboxPlacesResponse data) => json.encode(data.toJson());
+String mapboxInfoResponseToJson(MapboxInfoResponse data) => json.encode(data.toJson());
 
-class MapboxPlacesResponse {
-    MapboxPlacesResponse({
+class MapboxInfoResponse {
+    MapboxInfoResponse({
         required this.type,
         required this.query,
         required this.features,
@@ -15,13 +14,13 @@ class MapboxPlacesResponse {
     });
 
     String type;
-    List<String> query;
+    List<double> query;
     List<Place> features;
     String attribution;
 
-    factory MapboxPlacesResponse.fromJson(Map<String, dynamic> json) => MapboxPlacesResponse(
+    factory MapboxInfoResponse.fromJson(Map<String, dynamic> json) => MapboxInfoResponse(
         type: json["type"],
-        query: List<String>.from(json["query"].map((x) => x)),
+        query: List<double>.from(json["query"].map((x) => x.toDouble())),
         features: List<Place>.from(json["features"].map((x) => Place.fromJson(x))),
         attribution: json["attribution"],
     );
@@ -33,3 +32,4 @@ class MapboxPlacesResponse {
         "attribution": attribution,
     };
 }
+

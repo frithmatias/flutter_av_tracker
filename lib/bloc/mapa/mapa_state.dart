@@ -9,13 +9,16 @@ class MapaState {
   final bool seguir;
   final LatLng ubicacionCentral;
   final Map<String, Polyline> polylines;
+  final Map<String, Marker> markers;
+
 
   const MapaState({
     this.mapaListo = false, 
     this.dibujarRecorrido = false,
     this.seguir = false,
     this.ubicacionCentral = const LatLng(0,0),
-    this.polylines = const {}
+    this.polylines = const {},
+    this.markers = const {}
   });
 
   MapaState copyWith({
@@ -23,13 +26,16 @@ class MapaState {
     bool? dibujarRecorrido,
     bool? seguir,
     LatLng? ubicacionCentral,
-    Map<String, Polyline>? polylines
+    Map<String, Polyline>? polylines,
+    Map<String, Marker>? markers,
+
   }) => MapaState(
     mapaListo: mapaListo ?? this.mapaListo, 
     dibujarRecorrido: dibujarRecorrido ?? this.dibujarRecorrido, 
     seguir: seguir ?? this.seguir,
     ubicacionCentral: ubicacionCentral ?? this.ubicacionCentral,
     polylines: polylines ?? this.polylines,
+    markers: markers ?? this.markers
   );
   
   @override
